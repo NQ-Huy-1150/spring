@@ -9,6 +9,8 @@ import com.huy.spring.exception.ErrorCode;
 import com.huy.spring.mapper.UserMapper;
 import com.huy.spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,8 @@ public class UserService {
             throw new AppExeption(ErrorCode.USER_EXISTED);
         }
         User user = mapper.toUser(request);
+        PasswordEncoder encoder = new BCryptPasswordEncoder(10);
+        user.setPassword(encoder.encode(request.getPassword()));
         return this.mapper.toResponse(this.userRepository.save(user));
     }
     public void updateRequest(UserUpdateRequest request) {

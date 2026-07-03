@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_LAST_NAME(400, "LastName can not empty"),
     INVALID_USERNAME(400, "Username must at least 5 characters"),
     INVALID_PASSWORD(400, "Password must at least 8 characters"),
+    UNAUTHENTICATED (401, "Unauthenticated")
     ;
     private int code;
     private String message;
