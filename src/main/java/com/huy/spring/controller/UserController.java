@@ -1,0 +1,53 @@
+package com.huy.spring.controller;
+
+import com.huy.spring.domain.dto.request.UserCreationRequest;
+import com.huy.spring.domain.dto.request.UserUpdateRequest;
+import com.huy.spring.domain.dto.response.ApiResponse;
+import com.huy.spring.domain.dto.response.MessageResponse;
+import com.huy.spring.domain.dto.response.UserResponse;
+import com.huy.spring.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/auth")
+public class UserController {
+    private final UserService userService;
+
+    @GetMapping("/users")
+    public ApiResponse<List<UserResponse>> getAllUser() {
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setCode(200);
+        response.setMessage("Get All user successfully !");
+        response.setResponse(this.userService.getAllUsers());
+        return response;
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable String id) {
+        return ResponseEntity.ok(this.userService.getUserById(id));
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> getCreateUser(@RequestBody @Valid UserCreationRequest creationRequest) {
+        return ResponseEntity.ok(this.userService.createRequest(creationRequest));
+    }
+    @PutMapping("/update")
+    public ResponseEntity<?> getUpdateUser(@RequestBody @Valid UserUpdateRequest updateRequest) {
+        this.userService.updateRequest(updateRequest);
+        return ResponseEntity.ok(new MessageResponse("Update successfully !"));
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> getDeleteUser(@PathVariable String id) {
+        boolean status = this.userService.deleteRequest(id);
+        if (status) {
+            return ResponseEntity.ok(new MessageResponse("Delete successfully !"));
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Id not found !"));
+    }
+}
