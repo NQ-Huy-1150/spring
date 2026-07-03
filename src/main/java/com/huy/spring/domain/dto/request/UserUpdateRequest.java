@@ -1,22 +1,21 @@
 package com.huy.spring.domain.dto.request;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     @NotNull
-    private String id;
-    @NotEmpty(message = "FirstName can not empty")
-    private String firstName;
-    @NotEmpty(message = "LastName can not empty")
-    private String lastName;
-    private LocalDate dob;
+    String id;
+    @NotEmpty(message = "INVALID_FIRST_NAME")
+    String firstName;
+    @NotEmpty(message = "INVALID_LAST_NAME")
+    String lastName;
+    LocalDate dob;
 }

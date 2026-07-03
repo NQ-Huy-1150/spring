@@ -2,10 +2,8 @@ package com.huy.spring.domain.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
@@ -13,14 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
     @NotEmpty(message = "INVALID_FIRST_NAME")
-    private String firstName;
+    String firstName;
     @NotEmpty(message = "INVALID_LAST_NAME")
-    private String lastName;
+    String lastName;
     @Size(min = 6, message = "INVALID_USERNAME")
-    private String username;
+    String username;
     @Size(min = 8, message = "INVALID_PASSWORD")
-    private String password;
-    private LocalDate dob;
+    String password;
+    LocalDate dob;
 }

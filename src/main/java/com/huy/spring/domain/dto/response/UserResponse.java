@@ -1,18 +1,17 @@
 package com.huy.spring.domain.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    private String id;
-    private String username;
-    private String fullName;
-    private LocalDate dob;
+    String id;
+    String username;
+    String fullName;
+    LocalDate dob;
 }

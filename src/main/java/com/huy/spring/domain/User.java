@@ -2,6 +2,7 @@ package com.huy.spring.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
@@ -12,12 +13,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue (strategy = GenerationType.UUID)
-    private String id;
-    private String username;
-    private String password;
-    private String fullName;
-    private LocalDate dob;
+    String id;
+    String username;
+    String password;
+    String fullName;
+    LocalDate dob;
 }

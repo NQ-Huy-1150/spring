@@ -1,16 +1,15 @@
 package com.huy.spring.domain.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiResponse <T> {
-    private int code;
-    private String message;
-    private T response;
+    int code;
+    String message;
+    T response;
 }
