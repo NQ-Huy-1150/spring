@@ -1,37 +1,58 @@
 package com.huy.spring.exception;
 
 import com.huy.spring.domain.dto.response.ApiResponse;
+import com.huy.spring.domain.dto.response.MessageResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(value = RuntimeException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiResponse<String> handlingRunTimeException(RuntimeException exception) {
-        ApiResponse<String> response = new ApiResponse<>();
-        response.setCode(400);
-        response.setMessage("RuntimeException Error");
-        response.setResponse(exception.getMessage());
-        return response;
+    ResponseEntity<?> handlingRunTimeException(RuntimeException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.builder()
+                        .code(500)
+                        .message("Uncategorized error")
+                        .build());
     }
 
     @ExceptionHandler(value = AppExeption.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiResponse<String> handlingAppException(AppExeption exception) {
+    ResponseEntity<?> handlingAppException(AppExeption exception) {
         ApiResponse<String> response = new ApiResponse<>();
         ErrorCode errorCode = exception.getErrorCode();
         response.setCode(errorCode.getCode());
         response.setMessage(errorCode.getMessage());
-        return response;
+        return ResponseEntity
+                .status(errorCode.getStatusCode())
+                .body(response);
+    }
+    @ExceptionHandler(value = AuthorizationDeniedException.class)
+    ResponseEntity<?> handlingAuthorizationDeniedException(AuthorizationDeniedException exception) {
+        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .build());
+    }
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<?> handlingAccessDeniedException(AccessDeniedException exception) {
+        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .build());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
