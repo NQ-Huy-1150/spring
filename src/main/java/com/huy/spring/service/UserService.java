@@ -10,6 +10,10 @@ import com.huy.spring.exception.ErrorCode;
 import com.huy.spring.mapper.UserMapper;
 import com.huy.spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
@@ -54,11 +59,26 @@ public class UserService {
         this.userRepository.deleteById(optional.get().getId());
         return true;
     }
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers() {
+        log.info("In method get-all-Users");
         return this.userRepository.findAll().stream().map(mapper::toResponse).toList();
     }
+    @PreAuthorize("#id == authentication.principal.claims['userId']")
     public UserResponse getUserById(String id) {
-        Optional<User> optional = this.userRepository.findById(id);
-        return mapper.toResponse(optional.orElseThrow(() -> new AppExeption(ErrorCode.USER_NOT_FOUND)));
+        log.info("Get owner's info successfully !");
+        return this.mapper.toResponse(
+                this.userRepository.findById(id).orElseThrow(
+                        () -> new AppExeption(ErrorCode.USER_NOT_FOUND)
+                )
+        );
+    }
+    @PostAuthorize("returnObject.username == authentication.name")
+    public UserResponse getUserByUsername(String username) {
+        return this.mapper.toResponse(
+                this.userRepository.findByUsername(username).orElseThrow(
+                        () -> new AppExeption(ErrorCode.USER_NOT_FOUND)
+                )
+        );
     }
 }

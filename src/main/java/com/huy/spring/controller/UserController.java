@@ -5,6 +5,8 @@ import com.huy.spring.domain.dto.request.UserUpdateRequest;
 import com.huy.spring.domain.dto.response.ApiResponse;
 import com.huy.spring.domain.dto.response.MessageResponse;
 import com.huy.spring.domain.dto.response.UserResponse;
+import com.huy.spring.exception.AppExeption;
+import com.huy.spring.exception.ErrorCode;
 import com.huy.spring.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -37,6 +40,17 @@ public class UserController {
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(this.userService.getUserById(id));
+    }
+    @GetMapping("/whoami")
+    public ApiResponse<UserResponse> whoAmI() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new AppExeption(ErrorCode.USER_NOT_FOUND);
+        }
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .response(this.userService.getUserByUsername(authentication.getName()))
+                .build();
     }
 
     @PostMapping("/create")
