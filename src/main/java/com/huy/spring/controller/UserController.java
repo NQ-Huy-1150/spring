@@ -8,11 +8,14 @@ import com.huy.spring.domain.dto.response.UserResponse;
 import com.huy.spring.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -21,6 +24,9 @@ public class UserController {
 
     @GetMapping("/users")
     public ApiResponse<List<UserResponse>> getAllUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("username: {}",authentication.getName());
+        authentication.getAuthorities().forEach(r -> log.info(r.getAuthority()));
         ApiResponse<List<UserResponse>> response = new ApiResponse<>();
         response.setCode(200);
         response.setMessage("Get All user successfully !");

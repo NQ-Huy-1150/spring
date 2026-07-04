@@ -22,11 +22,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,8 @@ public class AuthenticationService {
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
+
+    PasswordEncoder passwordEncoder;
 
     public IntrospectResponse introspectResponse (IntrospectRequest request) {
         var token = request.getToken();
@@ -58,23 +63,24 @@ public class AuthenticationService {
         User user = this.authenticationRepository.findByUsername(loginRequest.getUsername()).orElseThrow(
                 () -> new AppExeption(ErrorCode.USER_NOT_FOUND)
         );
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-    boolean authenticated = encoder.matches(loginRequest.getPassword(), user.getPassword());
+    boolean authenticated = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
     if (!authenticated) {
         throw new AppExeption(ErrorCode.UNAUTHENTICATED);
     }
         return AuthenticationResponse.builder()
-                        .token(generateToken(loginRequest.getUsername()))
+                        .token(generateToken(user))
                 .build();
     }
-    private String generateToken(String username) {
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS)
                                 .toEpochMilli()))
+                .claim("userId",user.getId())
+                .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
@@ -86,5 +92,12 @@ public class AuthenticationService {
             log.error("Cannot create token", e);
             throw new RuntimeException(e);
         }
+    }
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return stringJoiner.toString();
     }
 }

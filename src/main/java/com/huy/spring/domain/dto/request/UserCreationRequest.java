@@ -17,7 +17,7 @@ public class UserCreationRequest {
     String firstName;
     @NotEmpty(message = "INVALID_LAST_NAME")
     String lastName;
-    @Size(min = 6, message = "INVALID_USERNAME")
+    @Size(min = 5, message = "INVALID_USERNAME")
     String username;
     @Size(min = 8, message = "INVALID_PASSWORD")
     String password;

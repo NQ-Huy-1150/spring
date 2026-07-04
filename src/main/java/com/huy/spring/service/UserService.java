@@ -4,6 +4,7 @@ import com.huy.spring.domain.User;
 import com.huy.spring.domain.dto.request.UserCreationRequest;
 import com.huy.spring.domain.dto.request.UserUpdateRequest;
 import com.huy.spring.domain.dto.response.UserResponse;
+import com.huy.spring.enums.Role;
 import com.huy.spring.exception.AppExeption;
 import com.huy.spring.exception.ErrorCode;
 import com.huy.spring.mapper.UserMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -27,6 +29,9 @@ public class UserService {
         User user = mapper.toUser(request);
         PasswordEncoder encoder = new BCryptPasswordEncoder(10);
         user.setPassword(encoder.encode(request.getPassword()));
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
         return this.mapper.toResponse(this.userRepository.save(user));
     }
     public void updateRequest(UserUpdateRequest request) {
