@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper (componentModel = "spring")
 public interface UserMapper {
     @Mapping(target = "fullName", expression = "java(request.getFirstName() + \" \" + request.getLastName())")
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     User toUser(UserCreationRequest request);
 
     UserResponse toResponse (User user);

@@ -16,6 +16,5 @@ public class UserResponse {
     String username;
     String fullName;
     LocalDate dob;
-//    Set<Users_Roles> roles;
-//    Set<Roles_Permissions> rolesPermissions;
+    Set<RoleResponse> roles;
 }

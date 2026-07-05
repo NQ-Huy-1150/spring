@@ -1,6 +1,5 @@
 package com.huy.spring.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

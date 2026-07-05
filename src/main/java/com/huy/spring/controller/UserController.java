@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -58,9 +57,11 @@ public class UserController {
         return ResponseEntity.ok(this.userService.createRequest(creationRequest));
     }
     @PutMapping("/update")
-    public ResponseEntity<?> getUpdateUser(@RequestBody @Valid UserUpdateRequest updateRequest) {
-        this.userService.updateRequest(updateRequest);
-        return ResponseEntity.ok(new MessageResponse("Update successfully !"));
+    public ApiResponse<UserResponse> getUpdateUser(@RequestBody @Valid UserUpdateRequest updateRequest) {
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .response(this.userService.updateRequest(updateRequest))
+                .build();
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> getDeleteUser(@PathVariable String id) {

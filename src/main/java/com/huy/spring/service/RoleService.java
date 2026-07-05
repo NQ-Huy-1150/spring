@@ -1,6 +1,5 @@
 package com.huy.spring.service;
 
-import com.huy.spring.domain.Permission;
 import com.huy.spring.domain.Role;
 import com.huy.spring.domain.dto.request.RoleRequest;
 import com.huy.spring.domain.dto.response.RoleResponse;

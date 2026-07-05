@@ -1,7 +1,6 @@
 package com.huy.spring.exception;
 
 import com.huy.spring.domain.dto.response.ApiResponse;
-import com.huy.spring.domain.dto.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
