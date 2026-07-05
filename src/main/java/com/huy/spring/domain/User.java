@@ -23,5 +23,7 @@ public class User {
     String password;
     String fullName;
     LocalDate dob;
-    Set<String> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Users_Roles> roles;
 }

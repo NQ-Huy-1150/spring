@@ -17,7 +17,10 @@ public enum ErrorCode {
     INVALID_USERNAME(400, "Username must at least 5 characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(400, "Password must at least 8 characters", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED (401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    ACCESS_DENIED (403, "Access Denied", HttpStatus.FORBIDDEN)
+    ACCESS_DENIED (403, "Access Denied", HttpStatus.FORBIDDEN),
+    ROLE_NOT_FOUND (404, "Role not found",HttpStatus.NOT_FOUND),
+    PERMISSION_NOT_FOUND (404, "Permission not found",HttpStatus.NOT_FOUND),
+    DELETE_FAILED (500, "Cant delete this item", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
     private int code;
     private String message;
