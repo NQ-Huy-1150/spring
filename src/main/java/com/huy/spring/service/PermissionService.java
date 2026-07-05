@@ -21,6 +21,9 @@ public class PermissionService {
     PermissionRepository permissionRepository;
     PermissionMapper mapper;
     public PermissionResponse handleCreatePermission(PermissionRequest request) {
+        if (this.permissionRepository.existsById(request.getName())) {
+            throw new AppExeption(ErrorCode.PERMISSION_EXISTED);
+        }
         Permission permission = this.mapper.toPermission(request);
         return this.mapper.toResponse(this.permissionRepository.save(permission));
     }

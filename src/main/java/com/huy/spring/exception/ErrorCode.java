@@ -20,7 +20,9 @@ public enum ErrorCode {
     ACCESS_DENIED (403, "Access Denied", HttpStatus.FORBIDDEN),
     ROLE_NOT_FOUND (404, "Role not found",HttpStatus.NOT_FOUND),
     PERMISSION_NOT_FOUND (404, "Permission not found",HttpStatus.NOT_FOUND),
-    DELETE_FAILED (500, "Cant delete this item", HttpStatus.INTERNAL_SERVER_ERROR)
+    DELETE_FAILED (500, "Cant delete this item", HttpStatus.INTERNAL_SERVER_ERROR),
+    PERMISSION_EXISTED (1003, "Permission existed",HttpStatus.BAD_REQUEST),
+    NULL_POINTER_ERROR (9999,"Null pointer error",HttpStatus.BAD_REQUEST)
     ;
     private int code;
     private String message;

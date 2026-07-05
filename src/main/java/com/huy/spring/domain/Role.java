@@ -20,9 +20,7 @@ public class Role {
     String name;
     String description;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Users_Roles> usersRoles;
+    @ManyToMany
+    Set<Permission> permissions;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Roles_Permissions> rolesPermissions;
 }

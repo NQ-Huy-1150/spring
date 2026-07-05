@@ -54,6 +54,15 @@ public class GlobalExceptionHandler {
                         .message(exception.getMessage())
                         .build());
     }
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    ResponseEntity<?> handlingIllegalArgumentException(IllegalArgumentException exception) {
+        ErrorCode errorCode = ErrorCode.NULL_POINTER_ERROR;
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(exception.getMessage())
+                        .build());
+    }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

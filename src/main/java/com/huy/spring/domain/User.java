@@ -24,6 +24,6 @@ public class User {
     String fullName;
     LocalDate dob;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Users_Roles> roles;
+    @ManyToMany
+    Set<Role> roles;
 }

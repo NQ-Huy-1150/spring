@@ -1,7 +1,5 @@
 package com.huy.spring.domain.dto.response;
 
-import com.huy.spring.domain.Roles_Permissions;
-import com.huy.spring.domain.Users_Roles;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,6 +16,6 @@ public class UserResponse {
     String username;
     String fullName;
     LocalDate dob;
-    Set<Users_Roles> roles;
-    Set<Roles_Permissions> rolesPermissions;
+//    Set<Users_Roles> roles;
+//    Set<Roles_Permissions> rolesPermissions;
 }
