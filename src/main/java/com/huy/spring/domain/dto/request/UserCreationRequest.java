@@ -24,6 +24,7 @@ public class UserCreationRequest {
     @NotNull(message = "NULL_USERNAME")
     String username;
     @Size(min = 8, message = "INVALID_PASSWORD")
+    @NotNull(message = "NULL_PASSWORD")
     String password;
     @DobConstraint(min = 12, message = "DOB_NOT_VALID")
     LocalDate dob;

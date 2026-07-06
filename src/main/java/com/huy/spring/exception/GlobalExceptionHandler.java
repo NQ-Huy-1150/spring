@@ -1,6 +1,8 @@
 package com.huy.spring.exception;
 
 import com.huy.spring.domain.dto.response.ApiResponse;
+import jakarta.validation.ConstraintViolation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -14,8 +16,12 @@ import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String MIN_ATTRIBUTE = "min";
+
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<?> handlingRunTimeException(RuntimeException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -35,6 +41,7 @@ public class GlobalExceptionHandler {
                 .status(errorCode.getStatusCode())
                 .body(response);
     }
+
     @ExceptionHandler(value = AuthorizationDeniedException.class)
     ResponseEntity<?> handlingAuthorizationDeniedException(AuthorizationDeniedException exception) {
         ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
@@ -44,6 +51,7 @@ public class GlobalExceptionHandler {
                         .message(exception.getMessage())
                         .build());
     }
+
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<?> handlingAccessDeniedException(AccessDeniedException exception) {
         ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
@@ -53,6 +61,7 @@ public class GlobalExceptionHandler {
                         .message(exception.getMessage())
                         .build());
     }
+
     @ExceptionHandler(value = IllegalArgumentException.class)
     ResponseEntity<?> handlingIllegalArgumentException(IllegalArgumentException exception) {
         ErrorCode errorCode = ErrorCode.NULL_POINTER_ERROR;
@@ -72,16 +81,27 @@ public class GlobalExceptionHandler {
             String fieldName = ((FieldError) error).getField();
             String enumKey = error.getDefaultMessage();
             ErrorCode errorCode = ErrorCode.INVALID_KEY;
+            var constraintViolation = error.unwrap(ConstraintViolation.class);
+            var attributes = constraintViolation.getConstraintDescriptor().getAttributes();
+            log.info(attributes.toString());
             try {
                 errorCode = ErrorCode.valueOf(enumKey);
             } catch (IllegalArgumentException e) {
 
             }
             response.setCode(errorCode.getCode());
-            errors.put(fieldName, errorCode.getMessage());
+            errors.put(fieldName, mapAttributes(errorCode.getMessage(), attributes));
         });
         response.setMessage("Validation failure");
         response.setResponse(errors);
         return response;
+    }
+
+    private String mapAttributes(String message, Map<String, Object> attributes) {
+        if (attributes.containsKey(MIN_ATTRIBUTE)) {
+            String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
+            return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
+        }
+        return message;
     }
 }

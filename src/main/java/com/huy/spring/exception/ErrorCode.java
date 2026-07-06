@@ -14,8 +14,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(404, "User not found !", HttpStatus.NOT_FOUND),
     INVALID_FIRST_NAME(400, "FirstName can not empty", HttpStatus.BAD_REQUEST),
     INVALID_LAST_NAME(400, "LastName can not empty", HttpStatus.BAD_REQUEST),
-    INVALID_USERNAME(400, "Username must at least 5 characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(400, "Password must at least 8 characters", HttpStatus.BAD_REQUEST),
+    INVALID_USERNAME(400, "Username must at least {min} characters", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(400, "Password must at least {min} characters", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     ACCESS_DENIED(403, "Access Denied", HttpStatus.FORBIDDEN),
     ROLE_NOT_FOUND(404, "Role not found", HttpStatus.NOT_FOUND),
@@ -24,7 +24,8 @@ public enum ErrorCode {
     PERMISSION_EXISTED(1003, "Permission existed", HttpStatus.BAD_REQUEST),
     NULL_POINTER_ERROR(9999, "Null pointer error", HttpStatus.BAD_REQUEST),
     DOB_NOT_VALID(400, "Invalid date of birth", HttpStatus.BAD_REQUEST),
-    NULL_USERNAME(400, "Username can not be null", HttpStatus.BAD_REQUEST);
+    NULL_USERNAME(400, "Username can not be null", HttpStatus.BAD_REQUEST),
+    NULL_PASSWORD(400, "Password can not be null", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
