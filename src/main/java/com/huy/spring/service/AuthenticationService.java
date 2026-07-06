@@ -3,6 +3,7 @@ package com.huy.spring.service;
 import com.huy.spring.domain.InvalidatedToken;
 import com.huy.spring.domain.User;
 import com.huy.spring.domain.dto.request.IntrospectRequest;
+import com.huy.spring.domain.dto.request.RefreshmentRequest;
 import com.huy.spring.domain.dto.request.UserLoginRequest;
 import com.huy.spring.domain.dto.request.UserLogoutRequest;
 import com.huy.spring.domain.dto.response.AuthenticationResponse;
@@ -81,6 +82,26 @@ public class AuthenticationService {
                 .expiryTime(expiryTime)
                 .build();
         invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    public AuthenticationResponse refreshToken(RefreshmentRequest request) throws ParseException, JOSEException {
+        var signedToken = verifyToken(request.getToken());
+        String jti = signedToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedToken.getJWTClaimsSet().getExpirationTime();
+        String userId = signedToken.getJWTClaimsSet().getClaimAsString("userId");
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jti)
+                .expiryTime(expiryTime)
+                .build();
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        User user = this.authenticationRepository.findById(userId).orElseThrow(
+                () -> new AppExeption(ErrorCode.USER_NOT_FOUND)
+        );
+
+        return AuthenticationResponse.builder()
+                .token(generateToken(user))
+                .build();
     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {

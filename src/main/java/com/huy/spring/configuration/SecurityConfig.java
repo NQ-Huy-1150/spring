@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final String[] PUBLIC_POST_ENDPOINTS = {"/auth/login", "/auth/logout", "/api/auth/create", "/auth/introspect"};
+    private final String[] PUBLIC_POST_ENDPOINTS = {"/auth/login", "/auth/logout", "/auth/refresh-token", "/api/auth/create", "/auth/introspect"};
     private final String[] PUBLIC_GET_ENDPOINTS = {"/"};
     private final String[] PUBLIC_PUT_ENDPOINTS = {"/api/auth/update"};
     private final String[] PUBLIC_DELETE_ENDPOINTS = {"/api/auth/delete"};

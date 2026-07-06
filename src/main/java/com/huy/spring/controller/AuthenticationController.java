@@ -1,6 +1,7 @@
 package com.huy.spring.controller;
 
 import com.huy.spring.domain.dto.request.IntrospectRequest;
+import com.huy.spring.domain.dto.request.RefreshmentRequest;
 import com.huy.spring.domain.dto.request.UserLoginRequest;
 import com.huy.spring.domain.dto.request.UserLogoutRequest;
 import com.huy.spring.domain.dto.response.ApiResponse;
@@ -48,6 +49,15 @@ public class AuthenticationController {
         var rs = this.authenticationService.introspectResponse(request);
         return ApiResponse.<IntrospectResponse>builder()
                 .response(rs)
+                .build();
+    }
+
+    @PostMapping("/refresh-token")
+    public ApiResponse<AuthenticationResponse> refreshTokenRequest(@RequestBody RefreshmentRequest request) throws ParseException, JOSEException {
+        var rs = this.authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .response(rs)
+                .message("Refresh token successfully!")
                 .build();
     }
 }
